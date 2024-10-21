@@ -13,7 +13,11 @@ class ViewController: UIViewController {
         //        sumArray(arr: mass)
         //        comparNumb(arr: mass)
         
-        corpNumb(arr: mass)
+        let minNumb = findMin(arr: mass)
+        print(minNumb)
+        
+        let maxNumb = findMax(arr: mass)
+        print(maxNumb)
         
         let findEvenNumb = evenNumb(arr: mass)
         print(findEvenNumb)
@@ -33,12 +37,27 @@ class ViewController: UIViewController {
     //    }
     
     // Task 1 & 2
-    func corpNumb(arr: [Int]){
-        let minNum = arr.min()
-        let maxNum = arr.max()
-        print(maxNum)
-        print(minNum)
+    
+    func findMin(arr: [Int]) -> Int{
+        var minItem = arr[0]
+        for item in arr {
+            if item < minItem {
+                minItem = item
+            }
+        }
+        return minItem
     }
+    
+    func findMax(arr: [Int]) -> Int{
+        var maxItem = arr[0]
+        for item in arr {
+            if item > maxItem {
+                maxItem = item
+            }
+        }
+        return maxItem
+    }
+    
     // Task 3
     func evenNumb(arr: [Int]) -> [Int]{
         var findNumb : [Int] = []
