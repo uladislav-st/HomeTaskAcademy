@@ -76,7 +76,7 @@ class ViewController: UIViewController {
     
     @IBAction func startButtonTapped(_ sender: UIButton) {
         for i in 0..<products.count {
-            products[i].quantity = 0
+            products[i].quantity = 100
         }
         totalRevenue = 0
         saleTextLabel.text = "Продажа началась"
@@ -85,44 +85,67 @@ class ViewController: UIViewController {
     }
     
     @IBAction func stopButtonTapped(_ sender: UIButton) {
-        var summary = "За смену: "
-        for i in products {
-            let soldQuantity = 100 - i.quantity
-            let revenue = soldQuantity * i.price
-            summary += "\(i.name), \(soldQuantity) шт, \(revenue)p;"
+        
+        var summary = "Остаток на конец смены: "
+        
+        for product in products {
+            let remainingQuantity = product.quantity
+            let remainingValue = remainingQuantity * product.price
+            summary += "\(product.name), \(remainingQuantity) шт - \(remainingValue)p; "
         }
-        summary += "Итого: \(totalRevenue)p"
+        
+        summary += "Заработано: \(totalRevenue)p"
         saleTextLabel.text = summary
+        
         updateUIForShift(isShiftActive: false)
     }
     
     @IBAction func sellButtonTapped(_ sender: UIButton) {
         var summary = ""
-        var totalSaleAmount = 0
-        
-        for i in 0..<products.count{
-            let product = products[i]
-            let quantityToSell = product.quantity
-            
-            if quantityToSell > 0 {
-                let revenue = quantityToSell * product.price
-                totalSaleAmount += revenue
-                totalRevenue += revenue
+                var totalSaleAmount = 0
                 
-                products[i].quantity = 0
+                for i in 0..<products.count {
+                    let product = products[i]
+                    let quantityToSell = product.quantity
+                    
+                    if quantityToSell > 0 {
+                        let revenue = quantityToSell * product.price
+                        totalSaleAmount += revenue
+                        totalRevenue += revenue
+                        
+                        // Обновляем количество товара после продажи
+                        products[i].quantity = 0
+                        
+                        // Добавляем информацию о каждом товаре в строку summary
+                        summary += "\(product.name), \(quantityToSell) шт - \(revenue)р; "
+                    }
+                }
                 
-                summary += "\(product.name), \(quantityToSell)шт, \(revenue)p"
-            }
-        }
-        
-        if summary.isEmpty {
-            saleTextLabel.text = "Нет товара для продажи!"
-        } else {
-            summary += "Итого: \(totalSaleAmount)p"
-            saleTextLabel.text = summary
-        }
-        
-        updateUIForSelectProduct()
+                if summary.isEmpty {
+                    saleTextLabel.text = "Нет товара для продажи!"
+                } else {
+                    summary += "ИТОГО: \(totalSaleAmount)р"
+                    saleTextLabel.text = summary
+                }
+                
+                updateUIForSelectProduct()
+//        let selectedProduct = products[selectProductIndex]
+//        let quantityToSell = selectedProduct.quantity
+//        
+//        if quantityToSell > 0 {
+//            // Вычисляем выручку от продажи и обновляем общий доход
+//            let revenue = quantityToSell * selectedProduct.price
+//            totalRevenue += revenue
+//            
+//            // Обновляем количество проданного товара
+//            products[selectProductIndex].quantity -= quantityToSell
+//            
+//            // Обновляем UI и показываем информацию о продаже
+//            saleTextLabel.text = "\(selectedProduct.name), \(quantityToSell) шт - \(revenue)р. ИТОГО: \(totalRevenue)р"
+//            updateUIForSelectProduct()
+//        } else {
+//            saleTextLabel.text = "Нет товара для продажи!"
+//        }
     }
     
     
