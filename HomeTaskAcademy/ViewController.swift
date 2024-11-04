@@ -1,29 +1,82 @@
 import UIKit
 
 class ViewController: UIViewController {
+// create image
+    let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "catToy")
+        imageView.contentMode = .scaleAspectFit
+        imageView.frame.size = CGSize(width: 150, height: 150) // Размер изображения
+        return imageView
+    }()
     
-    let myView = UIView()
+    let topPadding: CGFloat = 50
+    let bottomPadding: CGFloat = 20
+    var tapCount: Int = 0
     
+    let tapCountLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Taps: 0"
+        label.font = UIFont.systemFont(ofSize: 24)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    }
-    @IBAction func addViewButton(_ sender: UIButton) {
-        addView()
-    }
-    @IBAction func movieViewButton(_ sender: UIButton) {
-        myView.frame.origin.y += CGFloat(Int.random(in: 0...200))
+        setRandomPosition()
+
+        view.addSubview(imageView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        imageView.addGestureRecognizer(tapGesture)
+        imageView.isUserInteractionEnabled = true
+        
+        view.addSubview(tapCountLabel)
+        setupTapCountLabelConstraints()
+        
+        // Добавляем наблюдатель за изменением размеров экрана
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didChangeOrientation),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
     }
     
-    func addView( ){
-        myView.frame = CGRect(
-            x: Int.random(in: 0...400),
-            y: Int.random(in: 0...400),
-            width: 100,
-            height: 100)
-        myView.backgroundColor = .cyan
-        view.addSubview(myView)
+    // Удаляем наблюдатель при освобождении памяти
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
-}
+    @objc func imageTapped() {
+        tapCount += 1
+        tapCountLabel.text = "Taps: \(tapCount)"
+        setRandomPosition()
+    }
 
+    // Метод вызывается при изменении ориентации экрана
+    @objc func didChangeOrientation() {
+        setRandomPosition() // Обновляем позицию изображения
+    }
+
+    private func setRandomPosition() {
+        let screenWidth = view.bounds.width
+        let screenHeight = view.bounds.height
+        let imageSize = imageView.frame.size
+
+        let randomX = CGFloat.random(in: 0...(screenWidth - imageSize.width))
+        let randomY = CGFloat.random(in: topPadding...(screenHeight - imageSize.height - bottomPadding))
+        
+        imageView.frame.origin = CGPoint(x: randomX, y: randomY)
+    }
+    
+    private func setupTapCountLabelConstraints() {
+        NSLayoutConstraint.activate([
+            tapCountLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            tapCountLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+}
