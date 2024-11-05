@@ -4,48 +4,101 @@ class ViewController: UIViewController {
 
     let squareSize: CGFloat = 70
     let spacing: CGFloat = 5
-    var lastSquarePosition: CGPoint = CGPoint(x: 10, y: 50)
     var squares: [UIView] = []
-
+    
+    // Создаем кнопки
+    let createSquareButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("CREATE", for: .normal)
+        button.backgroundColor = .systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let clearButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("CLEAR", for: .normal)
+        button.backgroundColor = .systemRed
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Добавляем кнопки на экран
+        view.addSubview(createSquareButton)
+        view.addSubview(clearButton)
+        
+        // Устанавливаем действия для кнопок
+        createSquareButton.addTarget(self, action: #selector(createSquareButtonTapped), for: .touchUpInside)
+        clearButton.addTarget(self, action: #selector(clearButtonTapped), for: .touchUpInside)
+        
+        setupConstraints()
     }
     
-    @IBAction func createSquareButton(_ sender: UIButton) {
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        layoutSquares()
+    }
+    
+    @objc func createSquareButtonTapped() {
         let newSquare = UIView()
         newSquare.backgroundColor = .randomColor()
         newSquare.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newSquare)
         
-        newSquare.frame = CGRect(
-            origin: lastSquarePosition,
-            size: CGSize(width: squareSize, height: squareSize)
-        )
-
         squares.append(newSquare)
+        layoutSquares()
+    }
+    
+    @objc func clearButtonTapped() {
+        squares.forEach { $0.removeFromSuperview() }
+        squares.removeAll()
+    }
+    
+    private func layoutSquares() {
+        var position = CGPoint(x: 10, y: 50)
         
-        if let buttonFrame = sender.superview?.convert(sender.frame, to: view) {
-            let maxSafeHeight = buttonFrame.minY - spacing
-            
-            if lastSquarePosition.y + squareSize > maxSafeHeight {
-                return
+        // Проверяем, до какого места можно размещать квадраты, чтобы не перекрывать кнопку
+        let maxSafeHeight: CGFloat = createSquareButton.frame.minY - spacing
+        
+        for square in squares {
+            // Если следующий квадрат не помещается справа, переносим его на новую строку
+            if position.x + squareSize > view.safeAreaLayoutGuide.layoutFrame.width {
+                position.x = 10
+                position.y += squareSize + spacing
             }
-        }
-        
-        if lastSquarePosition.x + squareSize + spacing + squareSize <= view.safeAreaLayoutGuide.layoutFrame.width {
-            // Если в строке есть место, двигаемся вправо
-            lastSquarePosition.x += squareSize + spacing
-        } else {
-            lastSquarePosition.x = 10
-            lastSquarePosition.y += squareSize + spacing
+            
+            // Если следующий ряд не помещается, прекращаем размещение
+            if position.y + squareSize > maxSafeHeight {
+                break
+            }
+            
+            // Устанавливаем новое положение квадрата
+            square.frame = CGRect(origin: position, size: CGSize(width: squareSize, height: squareSize))
+            position.x += squareSize + spacing
         }
     }
     
-    @IBAction func clearButton(_ sender: UIButton) {
-
-        squares.forEach { $0.removeFromSuperview() }
-        squares.removeAll()
-        lastSquarePosition = CGPoint(x: 10, y: 50)
+    private func setupConstraints() {
+        // Ограничения для кнопки "Create Square"
+        NSLayoutConstraint.activate([
+            createSquareButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            createSquareButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            createSquareButton.heightAnchor.constraint(equalToConstant: 50),
+            createSquareButton.widthAnchor.constraint(equalToConstant: 100)
+        ])
+        
+        // Ограничения для кнопки "Clear"
+        NSLayoutConstraint.activate([
+            clearButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            clearButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            clearButton.heightAnchor.constraint(equalToConstant: 50),
+            clearButton.widthAnchor.constraint(equalToConstant: 100)
+        ])
     }
 }
 
