@@ -37,18 +37,12 @@ class ViewController: UIViewController {
         view.addSubview(tapCountLabel)
         setupTapCountLabelConstraints()
         
-        // Добавляем наблюдатель за изменением размеров экрана
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(didChangeOrientation),
             name: UIDevice.orientationDidChangeNotification,
             object: nil
         )
-    }
-    
-    // Удаляем наблюдатель при освобождении памяти
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
     @objc func imageTapped() {
@@ -57,16 +51,14 @@ class ViewController: UIViewController {
         setRandomPosition()
     }
 
-    // Метод вызывается при изменении ориентации экрана
     @objc func didChangeOrientation() {
-        setRandomPosition() // Обновляем позицию изображения
+        setRandomPosition()
     }
 
     private func setRandomPosition() {
         let screenWidth = view.bounds.width
         let screenHeight = view.bounds.height
         let imageSize = imageView.frame.size
-
         let randomX = CGFloat.random(in: 0...(screenWidth - imageSize.width))
         let randomY = CGFloat.random(in: topPadding...(screenHeight - imageSize.height - bottomPadding))
         
