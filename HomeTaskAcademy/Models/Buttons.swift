@@ -1,13 +1,5 @@
-//
-//  Buttons.swift
-//  HomeTaskAcademy
-//
-//  Created by Vlad Stankevich on 14.11.24.
-//
-
 import Foundation
 import UIKit
-
 
 final class Buttons {
     
