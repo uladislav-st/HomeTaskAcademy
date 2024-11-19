@@ -3,7 +3,7 @@ import UIKit
 
 final class Buttons {
     
-    static  let createSquareButton: UIButton = {
+    static let createSquareButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("CREATE", for: .normal)
         button.backgroundColor = .systemBlue
