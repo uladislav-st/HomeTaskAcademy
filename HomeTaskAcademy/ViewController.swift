@@ -1,52 +1,102 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
-    @IBOutlet weak var productNameLabel: UILabel!
-    @IBOutlet weak var quantityLabel: UILabel!
-    @IBOutlet weak var saleTextLabel: UILabel!
-    @IBOutlet weak var startButton: UIButton!
-    @IBOutlet weak var stopButton: UIButton!
-    @IBOutlet weak var sellButton: UIButton!
-    @IBOutlet weak var increaseButton: UIButton!
-    @IBOutlet weak var decreaseButton: UIButton!
-    @IBOutlet weak var prevButton: UIButton!
-    @IBOutlet weak var nextButton: UIButton!
-    
-    var products: [(name: String, quantity: Int, price: Int)] = [
-        ("Old Bobby", 0, 300),
-        ("Lidskae", 0, 450),
-        ("Alivaria", 0, 399)
+
+    var products: [Product] = [
+        Product(name: "Old Bobby", quantity: 0, price: 300),
+        Product(name: "Lidskae", quantity: 0, price: 450),
+        Product(name: "Alivaria", quantity: 0, price: 399)
     ]
-    
-    var selectProductIndex: Int = 0{
-        didSet{
-            updateUIForSelectProduct()
-        }
-    }
-    
     var totalRevenue: Int = 0
-    
+    var selectedQuantities: [Int] = [0, 0, 0]
+    var selectedProductIndex: Int = 0
+
+    let productNameLabel = UILabel()
+    let quantityLabel = UILabel()
+    let saleTextLabel = UILabel()
+    let startButton = UIButton()
+    let stopButton = UIButton()
+    let sellButton = UIButton()
+    let increaseButton = UIButton()
+    let decreaseButton = UIButton()
+    let prevButton = UIButton()
+    let nextButton = UIButton()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        saleTextLabel.text = " "
-        saleTextLabel.numberOfLines = 0
-        saleTextLabel.lineBreakMode = .byWordWrapping
-        saleTextLabel.adjustsFontSizeToFitWidth = true
-        saleTextLabel.minimumScaleFactor = 0.5
+        view.backgroundColor = .white
+        setupUI()
         updateUIForSelectProduct()
         updateUIForShift(isShiftActive: false)
+    }
+
+    func setupUI() {
+        let screenWidth = view.frame.width
+        productNameLabel.frame = CGRect(x: Constants.Layout.padding, y: 100, width: screenWidth - 2 * Constants.Layout.padding, height: Constants.Layout.labelHeight)
+        productNameLabel.textAlignment = .center
+        view.addSubview(productNameLabel)
+
+        prevButton.frame = CGRect(x: Constants.Layout.padding, y: 150, width: Constants.Layout.buttonWidth, height: Constants.Layout.buttonHeight)
+        prevButton.setTitle("<", for: .normal)
+        prevButton.backgroundColor = Constants.Colors.buttonBackground
+        prevButton.addTarget(self, action: #selector(prevProduct), for: .touchUpInside)
+        view.addSubview(prevButton)
         
+        nextButton.frame = CGRect(x: screenWidth - Constants.Layout.buttonWidth - Constants.Layout.padding, y: 150, width: Constants.Layout.buttonWidth, height: Constants.Layout.buttonHeight)
+        nextButton.setTitle(">", for: .normal)
+        nextButton.backgroundColor = Constants.Colors.buttonBackground
+        nextButton.addTarget(self, action: #selector(nextProduct), for: .touchUpInside)
+        view.addSubview(nextButton)
+ 
+        quantityLabel.frame = CGRect(x: Constants.Layout.padding, y: 200, width: screenWidth - 2 * Constants.Layout.padding, height: Constants.Layout.labelHeight)
+        quantityLabel.textAlignment = .center
+        view.addSubview(quantityLabel)
+        
+        increaseButton.frame = CGRect(x: screenWidth - Constants.Layout.buttonWidth - Constants.Layout.padding, y: 250, width: Constants.Layout.buttonWidth, height: Constants.Layout.buttonHeight)
+        increaseButton.setTitle("+", for: .normal)
+        increaseButton.backgroundColor = Constants.Colors.buttonBackground
+        increaseButton.addTarget(self, action: #selector(increaseQuantity), for: .touchUpInside)
+        view.addSubview(increaseButton)
+        
+        decreaseButton.frame = CGRect(x: Constants.Layout.padding, y: 250, width: Constants.Layout.buttonWidth, height: Constants.Layout.buttonHeight)
+        decreaseButton.setTitle("-", for: .normal)
+        decreaseButton.backgroundColor = Constants.Colors.buttonBackground
+        decreaseButton.addTarget(self, action: #selector(decreaseQuantity), for: .touchUpInside)
+        view.addSubview(decreaseButton)
+        
+        startButton.frame = CGRect(x: Constants.Layout.padding, y: 320, width: Constants.Layout.buttonWidth, height: Constants.Layout.buttonHeight)
+        startButton.setTitle(Constants.Texts.startButton, for: .normal)
+        startButton.backgroundColor = Constants.Colors.buttonBackground
+        startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+        view.addSubview(startButton)
+        
+        sellButton.frame = CGRect(x: (screenWidth - Constants.Layout.buttonWidth) / 2, y: 320, width: Constants.Layout.buttonWidth, height: Constants.Layout.buttonHeight)
+        sellButton.setTitle(Constants.Texts.sellButton, for: .normal)
+        sellButton.backgroundColor = Constants.Colors.buttonBackground
+        sellButton.addTarget(self, action: #selector(sellButtonTapped), for: .touchUpInside)
+        view.addSubview(sellButton)
+        
+        stopButton.frame = CGRect(x: screenWidth - Constants.Layout.buttonWidth - Constants.Layout.padding, y: 320, width: Constants.Layout.buttonWidth, height: Constants.Layout.buttonHeight)
+        stopButton.setTitle(Constants.Texts.stopButton, for: .normal)
+        stopButton.backgroundColor = Constants.Colors.buttonBackground
+        stopButton.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
+        view.addSubview(stopButton)
+       
+        saleTextLabel.frame = CGRect(x: Constants.Layout.padding, y: 400, width: screenWidth - 2 * Constants.Layout.padding, height: 200)
+        saleTextLabel.numberOfLines = 0
+        saleTextLabel.textAlignment = .center
+        view.addSubview(saleTextLabel)
     }
-    
+
+
     func updateUIForSelectProduct() {
-        let selectProduct = products[selectProductIndex]
-        productNameLabel.text = selectProduct.name
-        quantityLabel.text = "\(selectProduct.quantity)"
+        let product = products[selectedProductIndex]
+        productNameLabel.text = product.name
+        quantityLabel.text = "\(selectedQuantities[selectedProductIndex]) / \(product.quantity)"
     }
-    
-    func updateUIForShift(isShiftActive: Bool){
+
+    func updateUIForShift(isShiftActive: Bool) {
         startButton.isEnabled = !isShiftActive
         stopButton.isEnabled = isShiftActive
         sellButton.isEnabled = isShiftActive
@@ -55,108 +105,53 @@ class ViewController: UIViewController {
         prevButton.isEnabled = isShiftActive
         nextButton.isEnabled = isShiftActive
     }
-    
-    @IBAction func increaseQuantity(_ sender: UIButton) {
-        if products[selectProductIndex].quantity < 99 {
-            products[selectProductIndex].quantity += 1
+
+    @objc func increaseQuantity() {
+        if selectedQuantities[selectedProductIndex] < products[selectedProductIndex].quantity {
+            selectedQuantities[selectedProductIndex] += 1
             updateUIForSelectProduct()
-        }else {
-            saleTextLabel.text = "Достигнуто макс кол-во"
         }
     }
-    @IBAction func decreaseQuantity(_ sender: UIButton) {
-        if products[selectProductIndex].quantity > 0 {
-            products[selectProductIndex].quantity -= 1
+
+    @objc func decreaseQuantity() {
+        if selectedQuantities[selectedProductIndex] > 0 {
+            selectedQuantities[selectedProductIndex] -= 1
             updateUIForSelectProduct()
-        } else {
-            saleTextLabel.text = "Минимальное кол-во 0"
         }
-        
     }
-    
-    @IBAction func startButtonTapped(_ sender: UIButton) {
+
+    @objc func startButtonTapped() {
         for i in 0..<products.count {
             products[i].quantity = 100
+            selectedQuantities[i] = 0
         }
         totalRevenue = 0
-        saleTextLabel.text = "Продажа началась"
-        updateUIForSelectProduct()
+        saleTextLabel.text = Constants.Texts.shiftStarted
         updateUIForShift(isShiftActive: true)
+        updateUIForSelectProduct()
     }
-    
-    @IBAction func stopButtonTapped(_ sender: UIButton) {
-        
-        var summary = "Остаток на конец смены: "
-        
-        for product in products {
-            let remainingQuantity = product.quantity
-            let remainingValue = remainingQuantity * product.price
-            summary += "\(product.name), \(remainingQuantity) шт - \(remainingValue)p; "
-        }
-        
-        summary += "Заработано: \(totalRevenue)p"
-        saleTextLabel.text = summary
-        
+
+    @objc func sellButtonTapped() {
+        saleTextLabel.text = calculateSales(products: &products, selectedQuantities: &selectedQuantities, totalRevenue: &totalRevenue)
+        updateUIForSelectProduct()
+    }
+
+    @objc func stopButtonTapped() {
+        saleTextLabel.text = formatSaleSummary(products: products, totalRevenue: totalRevenue)
         updateUIForShift(isShiftActive: false)
     }
-    
-    @IBAction func sellButtonTapped(_ sender: UIButton) {
-        var summary = ""
-                var totalSaleAmount = 0
-                
-                for i in 0..<products.count {
-                    let product = products[i]
-                    let quantityToSell = product.quantity
-                    
-                    if quantityToSell > 0 {
-                        let revenue = quantityToSell * product.price
-                        totalSaleAmount += revenue
-                        totalRevenue += revenue
-                        
-                        // Обновляем количество товара после продажи
-                        products[i].quantity = 0
-                        
-                        // Добавляем информацию о каждом товаре в строку summary
-                        summary += "\(product.name), \(quantityToSell) шт - \(revenue)р; "
-                    }
-                }
-                
-                if summary.isEmpty {
-                    saleTextLabel.text = "Нет товара для продажи!"
-                } else {
-                    summary += "ИТОГО: \(totalSaleAmount)р"
-                    saleTextLabel.text = summary
-                }
-                
-                updateUIForSelectProduct()
-//        let selectedProduct = products[selectProductIndex]
-//        let quantityToSell = selectedProduct.quantity
-//        
-//        if quantityToSell > 0 {
-//            // Вычисляем выручку от продажи и обновляем общий доход
-//            let revenue = quantityToSell * selectedProduct.price
-//            totalRevenue += revenue
-//            
-//            // Обновляем количество проданного товара
-//            products[selectProductIndex].quantity -= quantityToSell
-//            
-//            // Обновляем UI и показываем информацию о продаже
-//            saleTextLabel.text = "\(selectedProduct.name), \(quantityToSell) шт - \(revenue)р. ИТОГО: \(totalRevenue)р"
-//            updateUIForSelectProduct()
-//        } else {
-//            saleTextLabel.text = "Нет товара для продажи!"
-//        }
-    }
-    
-    
-    @IBAction func prevProductsButton(_ sender: UIButton) {
-        if selectProductIndex > 0 {
-            selectProductIndex -= 1
+
+    @objc func prevProduct() {
+        if selectedProductIndex > 0 {
+            selectedProductIndex -= 1
+            updateUIForSelectProduct()
         }
     }
-    @IBAction func nextProductsButton(_ sender: UIButton) {
-        if selectProductIndex < products.count - 1  {
-            selectProductIndex += 1
+
+    @objc func nextProduct() {
+        if selectedProductIndex < products.count - 1 {
+            selectedProductIndex += 1
+            updateUIForSelectProduct()
         }
     }
 }
