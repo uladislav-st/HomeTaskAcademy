@@ -2,31 +2,44 @@ import UIKit
 
 class SecondViewController: UIViewController {
     var receivedText: String?
-    
+    var receivedUserInfo: UserInfo?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationItem.hidesBackButton = true
 
         guard let text = receivedText else {
-            print("No text received!")
-            setupFallbackUI()
+            setupFallbackUI(message: "No text provided")
+            return
+        }
+        guard let userInfo = receivedUserInfo else {
+            setupFallbackUI(message: "No user info provided")
             return
         }
 
-        setupUI(with: text)
+        setupUI(with: text, userInfo: userInfo)
     }
 
-    private func setupUI(with text: String) {
-        let label = UILabel()
-        label.text = text
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
+    private func setupUI(with text: String, userInfo: UserInfo) {
+        let textLabel = UILabel()
+        textLabel.text = "Message: \(text)"
+        textLabel.textAlignment = .center
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(textLabel)
+
+        let userInfoLabel = UILabel()
+        userInfoLabel.text = "User: \(userInfo.name), Age: \(userInfo.age)"
+        userInfoLabel.textAlignment = .center
+        userInfoLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(userInfoLabel)
 
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            textLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+
+            userInfoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            userInfoLabel.topAnchor.constraint(equalTo: textLabel.bottomAnchor, constant: 20)
         ])
 
         let goBackButton = UIButton(type: .system)
@@ -38,13 +51,13 @@ class SecondViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             goBackButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            goBackButton.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20)
+            goBackButton.topAnchor.constraint(equalTo: userInfoLabel.bottomAnchor, constant: 20)
         ])
     }
 
-    private func setupFallbackUI() {
+    private func setupFallbackUI(message: String) {
         let fallbackLabel = UILabel()
-        fallbackLabel.text = "No text provided"
+        fallbackLabel.text = message
         fallbackLabel.textAlignment = .center
         fallbackLabel.textColor = .red
         fallbackLabel.translatesAutoresizingMaskIntoConstraints = false
