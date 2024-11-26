@@ -11,7 +11,7 @@ class ViewController: UIViewController {
         
         createSquares()
 
-        updateSquareSize(at: 0, width: 20, height: 100)
+//        updateSquareSize(at: 0, width: 20, height: 100)
     }
 
     private func createSquares() {
