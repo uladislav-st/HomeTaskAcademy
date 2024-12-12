@@ -63,7 +63,7 @@ class ViewController: UIViewController {
 
         burgerButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16)
-            make.trailing.equalToSuperview().offset(-16) 
+            make.trailing.equalToSuperview().offset(-16)
             make.width.height.equalTo(50)
         }
 
@@ -75,7 +75,6 @@ class ViewController: UIViewController {
 
     @objc private func toggleMenu() {
         isMenuOpen.toggle()
-
         sideMenu.snp.updateConstraints { make in
             make.leading.equalToSuperview().offset(isMenuOpen ? 0 : -sideMenuWidth)
         }
