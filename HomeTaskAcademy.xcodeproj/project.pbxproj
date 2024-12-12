@@ -6,7 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6D2A9A37F9649CC3B1C0C7DB /* Pods_HomeTaskAcademy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA285BE5DFAFE95F7B7DB60F /* Pods_HomeTaskAcademy.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		2D2EEBD009C5DCC325954B77 /* Pods-HomeTaskAcademy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HomeTaskAcademy.debug.xcconfig"; path = "Target Support Files/Pods-HomeTaskAcademy/Pods-HomeTaskAcademy.debug.xcconfig"; sourceTree = "<group>"; };
+		A68C70D35F308B2E0CE0F478 /* Pods-HomeTaskAcademy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HomeTaskAcademy.release.xcconfig"; path = "Target Support Files/Pods-HomeTaskAcademy/Pods-HomeTaskAcademy.release.xcconfig"; sourceTree = "<group>"; };
+		EA285BE5DFAFE95F7B7DB60F /* Pods_HomeTaskAcademy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HomeTaskAcademy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBBC201C2CC5C66400EFF7A5 /* HomeTaskAcademy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomeTaskAcademy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -36,17 +43,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D2A9A37F9649CC3B1C0C7DB /* Pods_HomeTaskAcademy.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E6E8EDC81E4DC6B4BEAB543 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EA285BE5DFAFE95F7B7DB60F /* Pods_HomeTaskAcademy.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		70D3E0B415ADB35F0ED473EF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2D2EEBD009C5DCC325954B77 /* Pods-HomeTaskAcademy.debug.xcconfig */,
+				A68C70D35F308B2E0CE0F478 /* Pods-HomeTaskAcademy.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		EBBC20132CC5C66400EFF7A5 = {
 			isa = PBXGroup;
 			children = (
 				EBBC201E2CC5C66400EFF7A5 /* HomeTaskAcademy */,
 				EBBC201D2CC5C66400EFF7A5 /* Products */,
+				70D3E0B415ADB35F0ED473EF /* Pods */,
+				0E6E8EDC81E4DC6B4BEAB543 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,9 +92,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EBBC202F2CC5C66600EFF7A5 /* Build configuration list for PBXNativeTarget "HomeTaskAcademy" */;
 			buildPhases = (
+				F82CE9D6BBB03F807275CA2E /* [CP] Check Pods Manifest.lock */,
 				EBBC20182CC5C66400EFF7A5 /* Sources */,
 				EBBC20192CC5C66400EFF7A5 /* Frameworks */,
 				EBBC201A2CC5C66400EFF7A5 /* Resources */,
+				4809AADAD3A10173021C0A8A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -77,8 +106,6 @@
 				EBBC201E2CC5C66400EFF7A5 /* HomeTaskAcademy */,
 			);
 			name = HomeTaskAcademy;
-			packageProductDependencies = (
-			);
 			productName = HomeTaskAcademy;
 			productReference = EBBC201C2CC5C66400EFF7A5 /* HomeTaskAcademy.app */;
 			productType = "com.apple.product-type.application";
@@ -127,6 +154,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4809AADAD3A10173021C0A8A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HomeTaskAcademy/Pods-HomeTaskAcademy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HomeTaskAcademy/Pods-HomeTaskAcademy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HomeTaskAcademy/Pods-HomeTaskAcademy-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F82CE9D6BBB03F807275CA2E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HomeTaskAcademy-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		EBBC20182CC5C66400EFF7A5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -140,12 +209,14 @@
 /* Begin XCBuildConfiguration section */
 		EBBC20302CC5C66600EFF7A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D2EEBD009C5DCC325954B77 /* Pods-HomeTaskAcademy.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LMTRALYB9R;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HomeTaskAcademy/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -172,12 +243,14 @@
 		};
 		EBBC20312CC5C66600EFF7A5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A68C70D35F308B2E0CE0F478 /* Pods-HomeTaskAcademy.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LMTRALYB9R;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HomeTaskAcademy/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
